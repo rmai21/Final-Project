@@ -1,7 +1,7 @@
 import './App.css'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
-import ContactPage from './pages/ContactPage'
+import ContactPage from './pages/CreationPage'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
   return (
     <BrowserRouter>
           <nav>
-            <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/contact">Contact</Link>
+            <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/creation">Create</Link>
           </nav>
           <Routes>
             <Route path="/" element={<HomePage />} />
