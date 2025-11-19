@@ -1,10 +1,10 @@
-const KEY = 'books_forum_posts_v1'
+const KEY = 'books_forum_posts_v2'
 
 export function loadPosts() {
   try {
     const raw = localStorage.getItem(KEY)
     if (!raw) return []
-    return JSON.parse(raw).map(p => ({ ...p })) // ensure plain object
+    return JSON.parse(raw)
   } catch (e) {
     console.error('Failed to load posts', e)
     return []

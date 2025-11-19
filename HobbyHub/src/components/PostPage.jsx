@@ -10,7 +10,7 @@ export default function PostPage({ posts, onUpdate, onDelete }) {
   const [commentText, setCommentText] = useState('')
   const navigate = useNavigate()
 
-  if (!post) return <div>Post not found. <Link to="/">Go home</Link></div>
+  if (!post) return <div style={{padding:20}}>Post not found. <Link to="/">Go home</Link></div>
 
   function handleUpvote() {
     const updated = { ...post, upvotes: post.upvotes + 1 }
@@ -33,7 +33,6 @@ export default function PostPage({ posts, onUpdate, onDelete }) {
   }
 
   if (editing) {
-    // pass initial to PostForm and when saved update and go back
     return <PostForm
       initial={post}
       onSubmit={(updated) => { onUpdate(updated); setEditing(false); navigate(`/post/${updated.id}`) }}
@@ -45,8 +44,11 @@ export default function PostPage({ posts, onUpdate, onDelete }) {
       <div className="post-header">
         <h2>{post.title}</h2>
         <div className="post-meta">
-          <span>{new Date(post.createdAt).toLocaleString()}</span>
-          <span>▲ {post.upvotes}</span>
+          <div className="meta-top">
+            <span className="username">Posted by <strong>@{post.username}</strong></span>
+            <span style={{marginLeft:12, color:'#7d7d7d'}}>{new Date(post.createdAt).toLocaleString()}</span>
+          </div>
+          <div style={{marginTop:8, color:'#7d7d7d'}}>▲ {post.upvotes} upvotes</div>
         </div>
       </div>
 
@@ -84,3 +86,4 @@ export default function PostPage({ posts, onUpdate, onDelete }) {
     </div>
   )
 }
+

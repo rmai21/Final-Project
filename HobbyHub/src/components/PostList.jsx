@@ -28,13 +28,18 @@ export default function PostList({ posts, query, setQuery, sortBy, setSortBy }) 
       </div>
 
       <ul className="post-list">
-        {filtered.length === 0 && <li className="empty">No posts yet</li>}
+        {filtered.length === 0 && <li className="empty">No posts yet — be the first! ✨</li>}
         {filtered.map(post => (
           <li key={post.id} className="post-card">
             <Link to={`/post/${post.id}`} className="post-link">
               <div className="meta">
-                <span className="time">{formatDistanceToNow(new Date(post.createdAt))} ago</span>
-                <span className="upvotes">▲ {post.upvotes}</span>
+                <div className="left-meta">
+                  <span className="username">@{post.username}</span>
+                </div>
+                <div className="right-meta">
+                  <span className="time">{formatDistanceToNow(new Date(post.createdAt))} ago</span>
+                  <span className="upvotes">▲ {post.upvotes}</span>
+                </div>
               </div>
               <h3 className="title">{post.title}</h3>
             </Link>

@@ -11,15 +11,20 @@ export default function App() {
   const [sortBy, setSortBy] = useState('time') // 'time' or 'upvotes'
   const navigate = useNavigate()
 
-  useEffect(() => { savePosts(posts) }, [posts])
+  useEffect(() => {
+    savePosts(posts)
+  }, [posts])
 
   const addPost = (post) => {
+    // newest first
     setPosts(prev => [post, ...prev])
-    navigate('/') // go home after creating
+    navigate('/')
   }
+
   const updatePost = (updated) => {
     setPosts(prev => prev.map(p => p.id === updated.id ? updated : p))
   }
+
   const deletePost = (id) => {
     setPosts(prev => prev.filter(p => p.id !== id))
     navigate('/')
@@ -28,7 +33,10 @@ export default function App() {
   return (
     <div className="container">
       <header>
-        <h1><Link to="/">Books Forum</Link></h1>
+        <div className="header-left">
+          <h1><Link to="/">Books Forum</Link></h1>
+          <p className="tagline">reads & anonymous chats ✨</p>
+        </div>
         <nav>
           <Link to="/create" className="btn">Create Post</Link>
         </nav>
@@ -47,12 +55,12 @@ export default function App() {
           } />
           <Route path="/create" element={<PostForm onSubmit={addPost} />} />
           <Route path="/post/:id" element={<PostPage posts={posts} onUpdate={updatePost} onDelete={deletePost} />} />
-          <Route path="*" element={<div>Page not found</div>} />
+          <Route path="*" element={<div style={{padding:20}}>Page not found — <Link to="/">Go home</Link></div>} />
         </Routes>
       </main>
 
       <footer>
-        <small>Books Forum: Your place to nerd over books</small>
+        <small>Books Forum — your place to nerd over books!</small>
       </footer>
     </div>
   )

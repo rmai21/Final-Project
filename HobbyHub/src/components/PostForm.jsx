@@ -1,14 +1,19 @@
 import React, { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { useNavigate } from 'react-router-dom'
+import { generateRandomUsername } from '../utils/usernameGenerator'
 
 export default function PostForm({ onSubmit, initial = null }) {
   const [title, setTitle] = useState(initial?.title ?? '')
   const [content, setContent] = useState(initial?.content ?? '')
   const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? '')
+  const [username, setUsername] = useState(initial?.username ?? '')
   const navigate = useNavigate()
-
   const isEdit = Boolean(initial)
+
+  function handleGenerate() {
+    setUsername(generateRandomUsername())
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -16,6 +21,8 @@ export default function PostForm({ onSubmit, initial = null }) {
       alert('Title is required')
       return
     }
+    // ensure username exists (generate if user forgot)
+    const finalName = username || generateRandomUsername()
     const post = {
       id: initial?.id ?? uuidv4(),
       title: title.trim(),
@@ -23,11 +30,12 @@ export default function PostForm({ onSubmit, initial = null }) {
       imageUrl: imageUrl.trim() || null,
       createdAt: initial?.createdAt ?? Date.now(),
       upvotes: initial?.upvotes ?? 0,
-      comments: initial?.comments ?? []
+      comments: initial?.comments ?? [],
+      username: finalName
     }
     onSubmit(post)
     if (!isEdit) {
-      navigate('/') // after creating: go home
+      navigate('/')
     }
   }
 
@@ -48,6 +56,15 @@ export default function PostForm({ onSubmit, initial = null }) {
         <label>
           Image URL (optional)
           <input value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://..." />
+        </label>
+
+        <label>
+          Anonymous Username
+          <div style={{display:'flex', gap:8, alignItems:'center'}}>
+            <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Generate or type a username" />
+            <button type="button" className="btn ghost" onClick={handleGenerate}>Generate</button>
+          </div>
+          <small style={{display:'block', marginTop:6, color:'#7d7d7d'}}>Usernames are anonymous and shown on the post.</small>
         </label>
 
         <div className="form-actions">
