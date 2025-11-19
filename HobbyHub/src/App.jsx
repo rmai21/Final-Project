@@ -1,23 +1,59 @@
-import './App.css'
-import HomePage from './pages/HomePage'
-import AboutPage from './pages/AboutPage'
-import CreationPage from './pages/CreationPage'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import PostList from './components/PostList'
+import PostForm from './components/PostForm'
+import PostPage from './components/PostPage'
+import { loadPosts, savePosts } from './lib/storage'
 
-function App() {
+export default function App() {
+  const [posts, setPosts] = useState(loadPosts())
+  const [query, setQuery] = useState('')
+  const [sortBy, setSortBy] = useState('time') // 'time' or 'upvotes'
+  const navigate = useNavigate()
+
+  useEffect(() => { savePosts(posts) }, [posts])
+
+  const addPost = (post) => {
+    setPosts(prev => [post, ...prev])
+    navigate('/') // go home after creating
+  }
+  const updatePost = (updated) => {
+    setPosts(prev => prev.map(p => p.id === updated.id ? updated : p))
+  }
+  const deletePost = (id) => {
+    setPosts(prev => prev.filter(p => p.id !== id))
+    navigate('/')
+  }
 
   return (
-    <BrowserRouter>
-          <nav>
-            <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/creation">Create</Link>
-          </nav>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/creation" element={<CreationPage />} />
-          </Routes>
-        </BrowserRouter>
-      );
-}
+    <div className="container">
+      <header>
+        <h1><Link to="/">Books Forum</Link></h1>
+        <nav>
+          <Link to="/create" className="btn">Create Post</Link>
+        </nav>
+      </header>
 
-export default App
+      <main>
+        <Routes>
+          <Route path="/" element={
+            <PostList
+              posts={posts}
+              query={query}
+              setQuery={setQuery}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+            />
+          } />
+          <Route path="/create" element={<PostForm onSubmit={addPost} />} />
+          <Route path="/post/:id" element={<PostPage posts={posts} onUpdate={updatePost} onDelete={deletePost} />} />
+          <Route path="*" element={<div>Page not found</div>} />
+        </Routes>
+      </main>
+
+      <footer>
+        <small>Books Forum — demo using localStorage</small>
+      </footer>
+    </div>
+  )
+}
