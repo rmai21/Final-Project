@@ -52,7 +52,7 @@ export default function App() {
       </main>
 
       <footer>
-        <small>Books Forum — demo using localStorage</small>
+        <small>Books Forum: Your place to nerd over books</small>
       </footer>
     </div>
   )
